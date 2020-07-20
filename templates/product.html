@@ -9,7 +9,7 @@
       <!--Grid column-->
       <div class="col-md-6 mb-4">
         <img
-          src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Products/14.jpg"
+          src="{{ object.imgsrc }}"
           class="img-fluid"
           alt=""
         />
@@ -28,21 +28,23 @@
           </div>
 
           <p class="lead">
+            {% if object.discount_price %}
             <span class="mr-1">
-              <del>$200</del>
+              <del>${{ object.price }}</del>
             </span>
+            <span>${{ object.discount_price }}</span>
+            {% else %}
             <span>${{ object.price }}</span>
+            {% endif %}
           </p>
 
           <p class="lead font-weight-bold">{{ object.title }}</p>
 
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Et dolor
-            suscipit libero eos atque quia ipsa sint voluptatibus! Beatae sit
-            assumenda asperiores iure at maxime atque repellendus maiores quia
-            sapiente.
+            {{ object.description }}
           </p>
 
+          {% comment %}
           <form class="d-flex justify-content-left">
             <!-- Default input -->
             <input
@@ -57,6 +59,13 @@
               <i class="fas fa-shopping-cart ml-1"></i>
             </button>
           </form>
+          {% endcomment %}
+          <a href="{{ object.get_add_to_cart_url }}" class="btn btn-primary btn-md my-0 p">
+            Add to cart
+            <i class="fas fa-shopping-cart ml-1"></i>
+          </a>
+
+
         </div>
         <!--Content-->
       </div>
