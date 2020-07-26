@@ -4,7 +4,7 @@
 >
   <div class="container">
     <!-- Brand -->
-    <a class="navbar-brand waves-effect" href="#">
+    <a class="navbar-brand waves-effect" href="{% url 'core:homepage' %}">
       <strong class="blue-text">FoodsForGeeks</strong>
     </a>
 
@@ -25,7 +25,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <!-- Left -->
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
+        <!-- <li class="nav-item active">
           <a class="nav-link waves-effect" href="{% url 'core:homepage' %}"
             >Home
             <span class="sr-only">(current)</span>
@@ -35,16 +35,18 @@
           <a class="nav-link waves-effect" href="{% url 'core:checkout' %}"
             >Checkout</a
           >
-        </li>
-        <li class="nav-item">
-          <a class="nav-link waves-effect" href=""
-            >Products</a
-          >
-        </li>
+        </li> -->
       </ul>
 
       <!-- Right -->
       <ul class="navbar-nav nav-flex-icons">
+        {% if request.user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link waves-effect">
+            <span class="badge blue z-depth-1 mr-1"> Welcome ! </span>
+            <span class="clearfix d-none d-sm-inline-block"> {{ user.username}} </span>
+          </a>
+        </li>
         <li class="nav-item">
           <a class="nav-link waves-effect">
             <span class="badge red z-depth-1 mr-1"> 1 </span>
@@ -53,32 +55,25 @@
           </a>
         </li>
         <li class="nav-item">
-          <a
-            href="https://www.facebook.com/mdbootstrap"
-            class="nav-link waves-effect"
-            target="_blank"
-          >
-            <i class="fab fa-facebook-f"></i>
+          <a class="nav-link waves-effect" href="{% url 'account_logout' %}">
+            <i class="fas fa-sign-out-alt"></i>
+            <span class="clearfix d-none d-sm-inline-block"> Sign Out </span>
+          </a>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link waves-effect" href="{% url 'account_login' %}">
+            <i class="fas fa-sign-in-alt"></i>
+            <span class="clearfix d-none d-sm-inline-block"> Sign In </span>
           </a>
         </li>
         <li class="nav-item">
-          <a
-            href="https://twitter.com/MDBootstrap"
-            class="nav-link waves-effect"
-            target="_blank"
-          >
-            <i class="fab fa-twitter"></i>
+          <a class="nav-link waves-effect" href="{% url 'account_signup' %}">
+            <i class="fas fa-user-plus"></i>
+            <span class="clearfix d-none d-sm-inline-block"> Sign Up </span>
           </a>
         </li>
-        <li class="nav-item">
-          <a
-            href="https://github.com/mdbootstrap/bootstrap-material-design"
-            class="nav-link border border-light rounded waves-effect"
-            target="_blank"
-          >
-            <i class="fab fa-github mr-2"></i>MDB GitHub
-          </a>
-        </li>
+        {% endif %}
       </ul>
     </div>
   </div>

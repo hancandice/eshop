@@ -9,7 +9,8 @@
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>Geekjeeyoung E-commerce</title>
+    <title>{% block head_title %}{% endblock %}</title>
+    {% block extra_head %} {% endblock %}
     <!-- Font Awesome -->
     <link
       rel="stylesheet"
@@ -52,21 +53,28 @@
 
   <body>
     <div class="mt-5 pt-4">
-      {% if messages %} 
-      {% for message in messages %}
-      <div {% if message.tags %} class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" {% endif %}>
+      {% if messages %} {% for message in messages %}
+      <div
+        {% if message.tags %}
+        class="alert alert-{{ message.tags }} alert-dismissible fade show"
+        role="alert"
+        {% endif %}
+      >
         {{ message }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <button
+          type="button"
+          class="close"
+          data-dismiss="alert"
+          aria-label="Close"
+        >
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      {% endfor %} 
-      {% endif %} 
+      {% endfor %} {% endif %}
     </div>
 
-    {% block content %} 
-    {% endblock content %} 
-    {% include "footer.html" %}
+    {% block content %} {% endblock content %} {% block extra_body %} 
+    {% endblock %} {% include "footer.html" %}
 
     <!-- SCRIPTS -->
     <!-- JQuery -->
