@@ -4,7 +4,7 @@
   <div class="container">
     <div class="table-responsive text-nowrap">
       <h2>Order Summary</h2>
-      <table class="table">
+      <table class="table table-striped text-center">
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -12,7 +12,8 @@
             <th scope="col">Price</th>
             <th scope="col">Discount Price</th>
             <th scope="col">Quantity</th>
-            <th scope="col">Total Item Price</th>   
+            <th scope="col">Total Price</th> 
+            <th scope="col">Saving</th> 
           </tr>
         </thead>
         <tbody>
@@ -27,29 +28,52 @@
               {% else %}
               
               {% endif %}
-            <td>{{ order_item.quantity }}</td>
+            <td><a><i class="fas fa-minus mr-2"></i></a>{{ order_item.quantity }}<a><i class="fas fa-plus ml-2"></i></a></td>
             <td>
               {% if order_item.item.discount_price %}
                 ${{ order_item.get_total_discount_item_price }}
-                <span class="badge badge-pill badge-default ml-1">Saving ${{ order_item.get_amount_saved }}</span>
-                
               {% else %}
                 ${{ order_item.get_total_item_price }}
               {% endif %}
             </td>
+            <td>
+              {% if order_item.item.discount_price %}
+              ${{ order_item.get_amount_saved }}                
+              {% else %}
+
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="7">Your cart is empty.</td>
+          </tr>
+          <tr>
+            <th scope="row" colspan="7">
+              <a href="{% url 'core:homepage' %}" class="btn btn-primary float-right">Continue Shopping</a>
+            </th>
           </tr>
           {% endfor %}
-        </tbody>
+          {% if object.get_total %}
         <tr>
-          <th scope="row">SUM</th>
-          <td></td>
-          <td></td>
-          <td>??</td>
-          <td>???</td>
-          <td>????</td>
+          <th scope="row" colspan="4"><b>Order Total</b></th>
+          <td><b>{{ object.get_total_quantity }}</b></td>
+          <td><b>${{ object.get_total }}</b></td>
+          <td>
+            {% if object.get_total_amount_saved %}
+            <b>💰 You've saved: <br>${{ object.get_total_amount_saved}}</b>
+            {% endif %}
+          </td>
+        </t>
+        <tr>
+          <th scope="row" colspan="7">
+            <a href="{% url 'core:checkout' %}" class="btn btn-secondary float-right ml-2">Proceed to checkout</a>
+            <a href="{% url 'core:homepage' %}" class="btn btn-primary float-right">Continue Shopping</a>
+          </th>
         </tr>
+        {% endif %}
       </table>
-    
+    </tbody>
     </div>
   </div>
 </main>
