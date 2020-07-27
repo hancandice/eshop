@@ -34,7 +34,7 @@ class OrderSummaryView(LoginRequiredMixin, View):
             }
             return render(self.request, 'order_summary.html', context)
         except ObjectDoesNotExist:
-            messages.error(self.request, "You do not have an active order.")
+            messages.warning(self.request, "You do not have an active order.")
             return redirect("/")
         return render(self.request, 'order_summary.html')
 
