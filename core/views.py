@@ -35,8 +35,7 @@ class OrderSummaryView(LoginRequiredMixin, View):
             return render(self.request, 'order_summary.html', context)
         except ObjectDoesNotExist:
             messages.warning(self.request, "You do not have an active order.")
-            return redirect("/")
-        return render(self.request, 'order_summary.html')
+            return render(self.request, 'order_summary.html')
 
 
 class ItemDetailView(DetailView):
@@ -84,11 +83,10 @@ def remove_from_cart(request, slug):
                 user=request.user,
                 is_ordered=False,
             )[0]
-            order.items.remove(order_item)
+            order_item.delete()
             messages.info(request, "This item was removed from your cart.")
             return redirect("core:product", slug=slug)
         else:
-
             messages.warning(request, "This item was not in your cart.")
             return redirect("core:product", slug=slug)
     else:

@@ -24,10 +24,10 @@
             <td>${{ order_item.item.price }}</td>
             <td>
               {% if order_item.item.discount_price %}
-              ${{ order_item.item.discount_price }}</td>
+              ${{ order_item.item.discount_price }}
               {% else %}
-              
               {% endif %}
+            </td>  
             <td><a><i class="fas fa-minus mr-2"></i></a>{{ order_item.quantity }}<a><i class="fas fa-plus ml-2"></i></a></td>
             <td>
               {% if order_item.item.discount_price %}
