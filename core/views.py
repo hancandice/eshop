@@ -7,11 +7,23 @@ from django.shortcuts import redirect
 from django.utils import timezone
 from django.views.generic import ListView, DetailView, View
 from .models import Item, OrderItem, Order
+from .forms import CheckoutForm
 
 
-def checkout(request):
-    context = {'items': Item.objects.all()}
-    return render(request, "checkout.html", context)
+class CheckoutView(View):
+    def get(self, *args, **kwargs):
+        # form
+        form = CheckoutForm()
+        context = {
+            'form': form
+        }
+        return render(self.request, "checkout.html", context)
+
+    def post(self, *args, **kwars):
+        form = CheckoutForm(self.request.POST or None)
+        if form.is_valid():
+            print("The form is valid.")
+            return redirect('core:checkout')
 
 
 def products(request):
