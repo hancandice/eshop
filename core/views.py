@@ -22,8 +22,9 @@ class CheckoutView(View):
     def post(self, *args, **kwars):
         form = CheckoutForm(self.request.POST or None)
         if form.is_valid():
-            print("The form is valid.")
-            return redirect('core:checkout')
+            return redirect('core:checkout')     
+        messages.warning(self.request, "Failed Checkout.")
+        return render(self.request, "checkout.html", {'form': form})
 
 
 def products(request):
