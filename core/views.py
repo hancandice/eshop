@@ -1,3 +1,6 @@
+import stripe
+
+from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
@@ -8,7 +11,8 @@ from django.utils import timezone
 from django.views.generic import ListView, DetailView, View
 from .models import Item, OrderItem, Order, BillingAddress
 from .forms import CheckoutForm
-from django.conf import settings
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 class CheckoutView(View):
@@ -56,10 +60,7 @@ class CheckoutView(View):
             # messages.info(self.request, "You do not have an active order.")
             return redirect("core:order-summary")
 
-STRIPE_SECRET_KEY = "sk_test_4eC39HqLyjWDarjtT1zdp7dc"
 
-import stripe
-stripe.api_key = settings.STRIPE_SECRET_KEY
 
 # `source` is obtained with Stripe.js; see https://stripe.com/docs/payments/accept-a-payment-charges#web-create-token
 
@@ -81,10 +82,6 @@ class PaymentView(View):
 
         order.is_ordered = True
 
-
-def products(request):
-    context = {'items': Item.objects.all()}
-    return render(request, "products.html", context)
 
 
 class HomeView(ListView):
@@ -109,6 +106,11 @@ class OrderSummaryView(LoginRequiredMixin, View):
 class ItemDetailView(DetailView):
     model = Item
     template_name = "product.html"
+
+
+def products(request):
+    context = {'items': Item.objects.all()}
+    return render(request, "products.html", context)
 
 
 @login_required

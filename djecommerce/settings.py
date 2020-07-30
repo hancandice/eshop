@@ -1,4 +1,5 @@
 import os
+import dotenv
 
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'development')
 
@@ -104,3 +105,12 @@ LOGIN_REDIRECT_URL = '/'
 
 # CRISPY FORMS
 CRISPY_TEMPLATE_PACK = "bootstrap4"
+
+# STRIPE API KEYS 
+
+dotenv_file = os.path.join(BASE_DIR, ".env")
+if os.path.isfile(dotenv_file):
+    dotenv.load_dotenv(dotenv_file)
+
+STRIPE_PUBLISHABLE_KEY = os.environ['STRIPE_PUBLISHABLE_KEY']
+STRIPE_SECRET_KEY = os.environ['STRIPE_SECRET_KEY']
