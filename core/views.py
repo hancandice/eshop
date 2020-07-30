@@ -6,25 +6,54 @@ from django.shortcuts import render, get_object_or_404
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.views.generic import ListView, DetailView, View
-from .models import Item, OrderItem, Order
+from .models import Item, OrderItem, Order, BillingAddress
 from .forms import CheckoutForm
 
 
 class CheckoutView(View):
     def get(self, *args, **kwargs):
-        # form
-        form = CheckoutForm()
-        context = {
-            'form': form
-        }
-        return render(self.request, "checkout.html", context)
+        try:
+            order = Order.objects.get(user=self.request.user, is_ordered=False)
+            # form
+            form = CheckoutForm()
+            context = {
+                'form': form
+            }
+            return render(self.request, "checkout.html", context)
+        except ObjectDoesNotExist:
+            return redirect("core:order-summary")
 
-    def post(self, *args, **kwars):
+    def post(self, *args, **kwargs):
         form = CheckoutForm(self.request.POST or None)
-        if form.is_valid():
-            return redirect('core:checkout')     
-        messages.warning(self.request, "Failed Checkout.")
-        return render(self.request, "checkout.html", {'form': form})
+        try:
+            order = Order.objects.get(user=self.request.user, is_ordered=False)
+            if form.is_valid():
+                street_address = form.cleaned_data.get('street_address')
+                apartment_address = form.cleaned_data.get('apartment_address')
+                country = form.cleaned_data.get('country')
+                zip = form.cleaned_data.get('zip')
+                # TODO: add functionality for these fields
+                # same_shipping_address = form.cleaned_data.get(
+                #     'same_shipping_address')
+                # save_info = form.cleaned_data.get('save_info')
+                payment_option = form.cleaned_data.get('payment_option')
+                billing_address = BillingAddress(
+                    user=self.request.user,
+                    street_address=street_address,
+                    apartment_address=apartment_address,
+                    country=country,
+                    zip=zip,
+                )
+                billing_address.save()
+                order.billing_address = billing_address
+                order.save()
+                # TODO: add redirect to the selected payment option
+                return redirect('core:checkout')
+            messages.warning(self.request, "Failed checkout.")
+            return render(self.request, "checkout.html", {'form': form})
+        except ObjectDoesNotExist:
+            # messages.info(self.request, "You do not have an active order.")
+            return redirect("core:order-summary")
 
 
 def products(request):
@@ -100,6 +129,8 @@ def remove_from_cart(request, slug):
             )[0]
             order_item.delete()
             messages.warning(request, "This item was removed from your cart.")
+            if order.items.count() == 0:
+                order.delete()
             return redirect("core:order-summary")
         else:
             messages.warning(request, "This item was not in your cart.")
@@ -131,6 +162,8 @@ def remove_single_item_from_cart(request, slug):
                 order_item.delete()
                 messages.warning(
                     request, "This item was removed from your cart.")
+                if order.items.count() == 0:
+                    order.delete()
                 return redirect("core:order-summary")
         else:
             messages.warning(request, "This item was not in your cart.")
