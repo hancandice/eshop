@@ -8,6 +8,7 @@ from django.utils import timezone
 from django.views.generic import ListView, DetailView, View
 from .models import Item, OrderItem, Order, BillingAddress
 from .forms import CheckoutForm
+from django.conf import settings
 
 
 class CheckoutView(View):
@@ -54,6 +55,31 @@ class CheckoutView(View):
         except ObjectDoesNotExist:
             # messages.info(self.request, "You do not have an active order.")
             return redirect("core:order-summary")
+
+STRIPE_SECRET_KEY = "sk_test_4eC39HqLyjWDarjtT1zdp7dc"
+
+import stripe
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
+# `source` is obtained with Stripe.js; see https://stripe.com/docs/payments/accept-a-payment-charges#web-create-token
+
+
+
+class PaymentView(View):
+    def get(self, *args, **kwargs):
+        # order
+        return render(self.request, "payment.html")
+
+    def post(self, *args, **kwargs):
+        order = Order.objects.get(user=self.request.user, is_ordered=False)
+        token = self.request.POST.get('stripeToken')
+        stripe.Charge.create(
+            amount=order.get_total() * 100, #cents
+            currency="eur",
+            source=token,
+        )
+
+        order.is_ordered = True
 
 
 def products(request):

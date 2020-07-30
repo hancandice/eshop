@@ -12,4 +12,5 @@ urlpatterns = [
          views.remove_from_cart, name="remove-from-cart"),
     path('remove-item-from-cart/<slug>/',
          views.remove_single_item_from_cart, name="remove-single-item-from-cart"),
+    path('payment/<payment_option>/', views.PaymentView.as_view(), name="payment"),
 ]
