@@ -244,7 +244,9 @@
 {% endblock content %} {% block script %}
 <script type="text/javascript" nonce="">
   // Create a Stripe client.
-  var stripe = Stripe("pk_test_TYooMQauvdEDq54NiTphI7jx");
+  var stripe = Stripe(
+    "pk_test_51HAdksIQmYgOHqdVdbf0zUcA1QoIZMle6lWRSgWF1odClQDy80PbOwz7zZN6YA6QV7r12ZMO7rdMvbR7ht9KkAeZ00ZFh9JFEO"
+  );
 
   // Create an instance of Elements.
   var elements = stripe.elements();

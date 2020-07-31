@@ -13,6 +13,7 @@ from .models import Item, OrderItem, Order, BillingAddress, Payment
 from .forms import CheckoutForm
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
+STRIPE_PUBLIC_KEY = settings.STRIPE_PUBLISHABLE_KEY
 
 
 class CheckoutView(View):
@@ -70,7 +71,7 @@ class PaymentView(View):
         try:
             order = Order.objects.get(user=self.request.user, is_ordered=False)
             token = self.request.POST.get('stripeToken')
-            amount = int(order.get_total() * 100)
+            amount = int(order.get_total() * 100)  # cents
             charge = stripe.Charge.create(
                 amount=amount,
                 currency="usd",
@@ -84,9 +85,15 @@ class PaymentView(View):
             payment.save()
 
             # assign the payment to the order
+
             order.is_ordered = True
             order.payment = payment
             order.save()
+
+            order_items = order.items.all()
+            order_items.update(is_ordered=True)
+            for item in order_items:
+                item.save()
 
             messages.success(
                 self.request, "Your order was successful.")

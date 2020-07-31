@@ -20,7 +20,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-
+    'stripe',
 
     'crispy_forms',
     'django_countries',
@@ -106,7 +106,7 @@ LOGIN_REDIRECT_URL = '/'
 # CRISPY FORMS
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
-# STRIPE API KEYS 
+# STRIPE Settings
 
 dotenv_file = os.path.join(BASE_DIR, ".env")
 if os.path.isfile(dotenv_file):
