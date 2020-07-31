@@ -42,7 +42,6 @@ class CheckoutView(View):
                 # same_shipping_address = form.cleaned_data.get(
                 #     'same_shipping_address')
                 # save_info = form.cleaned_data.get('save_info')
-                payment_option = form.cleaned_data.get('payment_option')
                 billing_address = BillingAddress(
                     user=self.request.user,
                     street_address=street_address,
@@ -52,11 +51,13 @@ class CheckoutView(View):
                 )
                 billing_address.save()
                 order.billing_address = billing_address
+                payment_option = form.cleaned_data.get('payment_option')
+                order.payment_option = payment_option
                 order.save()
 
-                if payment_option == "S":
+                if payment_option == "Stripe":
                     return redirect('core:payment', payment_option="stripe")
-                elif payment_option == "P":
+                elif payment_option == "PayPal":
                     return redirect('core:payment', payment_option="paypal")
                 else:
                     messages.warning(
@@ -70,9 +71,18 @@ class CheckoutView(View):
 
 
 class PaymentView(View):
-    def get(self, *args, **kwargs):
+    def get(self, request, payment_option, *args, **kwargs):
+        if payment_option == "stripe":
+            payment_option = "Stripe"
+        elif payment_option == "paypal":
+            payment_option = "PayPal"
         # order
-        return render(self.request, "payment.html")
+        order = Order.objects.get(
+            user=self.request.user, is_ordered=False, payment_option=payment_option)
+        context = {
+            'order': order,
+        }
+        return render(self.request, "payment.html", context)
 
     def post(self, *args, **kwargs):
         try:

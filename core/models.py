@@ -84,6 +84,7 @@ class Order(models.Model):
         'BillingAddress', on_delete=models.SET_NULL, blank=True, null=True)
     payment = models.ForeignKey(
         'Payment', on_delete=models.SET_NULL, blank=True, null=True)
+    payment_option = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
         return self.user.username
