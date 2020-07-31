@@ -27,7 +27,8 @@ class Item(models.Model):
                              max_length=1, null=True, blank=True)
     slug = models.SlugField()
     description = models.TextField()
-    imgsrc = models.TextField()
+    imgsrc = models.TextField(blank=True, null=True)
+    image = models.ImageField(blank=True, null=True)
 
     def __str__(self):
         return self.title

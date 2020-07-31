@@ -8,11 +8,20 @@
     <div class="row wow fadeIn">
       <!--Grid column-->
       <div class="col-md-6 mb-4">
+        {% if object.image %}
+        <img
+          src="{{ object.image.url }}"
+          class="img-fluid"
+          alt=""
+        />
+        {% elif not object.image and object.imgsrc %}
         <img
           src="{{ object.imgsrc }}"
           class="img-fluid"
           alt=""
         />
+        {% else %} 
+        {% endif %}
       </div>
       <!--Grid column-->
 
