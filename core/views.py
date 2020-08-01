@@ -25,6 +25,7 @@ class CheckoutView(View):
                 'form': form,
                 'couponform': CouponForm(),
                 'order': order,
+                'DISPLAY_COUPON_FORM': True,
             }
             return render(self.request, "checkout.html", context)
         except ObjectDoesNotExist:
@@ -85,10 +86,15 @@ class PaymentView(View):
         # order
         order = Order.objects.get(
             user=self.request.user, is_ordered=False, payment_option=payment_option)
-        context = {
-            'order': order,
-        }
-        return render(self.request, "payment.html", context)
+        if order.billing_address:
+            context = {
+                'order': order,
+                'DISPLAY_COUPON_FORM': False,
+            }
+            return render(self.request, "payment.html", context)
+        else:
+            messages.warning(self.request, "You have not added a billing address.")  
+            return redirect("core:checkout")  
 
     def post(self, *args, **kwargs):
         try:
@@ -164,6 +170,7 @@ class HomeView(ListView):
     model = Item
     paginate_by = 8
     template_name = "home.html"
+    ordering = ['-create_date']
 
 
 class OrderSummaryView(LoginRequiredMixin, View):
@@ -277,29 +284,22 @@ def remove_single_item_from_cart(request, slug):
         return redirect("core:product", slug=slug)
 
 
-# def get_coupon(request, code):
-
-
-def add_coupon(request):
-    if request.method == "POST":
-        form = CouponForm(request.POST or None)
+class AddCouponView(View):
+    def post(self, *args, **kwargs):
+        form = CouponForm(self.request.POST or None)
         if form.is_valid():
             code = form.cleaned_data.get('code')
-            order = Order.objects.get(user=request.user, is_ordered=False)
+            order = Order.objects.get(user=self.request.user, is_ordered=False)
             if order:
                 try:
                     coupon = Coupon.objects.get(code=code)
                 except ObjectDoesNotExist:
-                    messages.warning(request, "This coupon does not exist.")
+                    messages.warning(self.request, "This coupon does not exist.")
                     return redirect("core:checkout")
                 order.coupon = coupon
                 order.save()
-                messages.success(request, "Successfully added coupon.")
+                messages.success(self.request, "Successfully added coupon.")
                 return redirect("core:checkout")
             else:
-                messages.warning(request, "You do not have an active order.")
+                messages.warning(self.request, "You do not have an active order.")
                 return redirect("core:order-summary")
-    # TODO: raise error
-    return None
-
-    

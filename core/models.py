@@ -29,6 +29,7 @@ class Item(models.Model):
     description = models.TextField()
     imgsrc = models.TextField(blank=True, null=True)
     image = models.ImageField(blank=True, null=True)
+    create_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title
@@ -92,10 +93,20 @@ class Order(models.Model):
     def __str__(self):
         return self.user.username
 
+    def get_total_gross(self):
+        total = 0
+        for order_item in self.items.all():
+            total += order_item.get_final_price()    
+        return total
+
     def get_total(self):
         total = 0
         for order_item in self.items.all():
-            total += order_item.get_final_price()
+            total += order_item.get_final_price()    
+        if self.coupon:
+            total -= self.coupon.amount
+            if total < 0:
+                total = 0
         return total
 
     def get_total_quantity(self):
@@ -137,6 +148,8 @@ class Payment(models.Model):
 
 class Coupon(models.Model):
     code = models.CharField(max_length=20)
+
+    amount = models.FloatField()
 
     def __str__(self):
         return self.code

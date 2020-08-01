@@ -60,7 +60,7 @@
         <tr>
           <th scope="row" colspan="4"><b>Order Total</b></th>
           <td><b>{{ object.get_total_quantity }}</b></td>
-          <td><b>${{ object.get_total }}</b></td>
+          <td><b>${{ object.get_total_gross }}</b></td>
           <td>
             {% if object.get_total_amount_saved %}
             <b>💰 You've saved: <br>${{ object.get_total_amount_saved}}</b>

@@ -127,19 +127,6 @@
       <!--Grid column-->
       <div class="col-md-4 mb-4">
         {% include "order_snippet.html" %}
-        <!-- Promo code -->
-        <form class="card p-2" action="{% url 'core:add-coupon' %}" method="POST">
-          {% csrf_token %} 
-          <div class="input-group">
-              {{ couponform.code }}
-            <div class="input-group-append">
-              <button class="btn btn-secondary btn-md waves-effect m-0" type="submit">
-                Redeem
-              </button>
-            </div>
-          </div>
-        </form>
-        <!-- Promo code -->
       </div>
       <!--Grid column-->
     </div>

@@ -23,14 +23,37 @@
     <li class="list-group-item d-flex justify-content-between bg-light">
       <div class="text-success">
         <h6 class="my-0">Promo code</h6>
-        <small>EXAMPLECODE</small>
+        <small>{{ order.coupon.code }}</small>
       </div>
-      <span class="text-success">-$5</span>
+      <span class="text-success">-${{ order.coupon.amount }}</span>
     </li>
     <li class="list-group-item d-flex justify-content-between">
       <span>Total (USD)</span>
-      <strong>${{ order.get_total }}</strong>
+      <span>
+        {% if order.coupon %}
+        <span class="mr-1">
+          <del>${{ order.get_total_gross }}</del>
+        </span>
+        <span><strong>${{ order.get_total }}</strong></span>
+        {% else %}
+        <span><strong>${{ order.get_total }}</strong></span>
+        {% endif %}
+      </span>
     </li>
   </ul>
-  <!-- Cart -->
-  
+
+  {% if DISPLAY_COUPON_FORM %}
+  <!-- Promo code -->
+  <form class="card p-2" action="{% url 'core:add-coupon' %}" method="POST">
+    {% csrf_token %} 
+    <div class="input-group">
+        {{ couponform.code }}
+      <div class="input-group-append">
+        <button class="btn btn-secondary btn-md waves-effect m-0" type="submit">
+          Redeem
+        </button>
+      </div>
+    </div>
+  </form>
+  <!-- Promo code -->
+  {% endif %}
