@@ -9,8 +9,8 @@ from django.shortcuts import render, get_object_or_404
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.views.generic import ListView, DetailView, View
-from .models import Item, OrderItem, Order, BillingAddress, Payment
-from .forms import CheckoutForm
+from .models import Item, OrderItem, Order, BillingAddress, Payment, Coupon
+from .forms import CheckoutForm, CouponForm
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 STRIPE_PUBLIC_KEY = settings.STRIPE_PUBLISHABLE_KEY
@@ -20,10 +20,11 @@ class CheckoutView(View):
     def get(self, *args, **kwargs):
         try:
             order = Order.objects.get(user=self.request.user, is_ordered=False)
-            # form
             form = CheckoutForm()
             context = {
-                'form': form
+                'form': form,
+                'couponform': CouponForm(),
+                'order': order,
             }
             return render(self.request, "checkout.html", context)
         except ObjectDoesNotExist:
@@ -65,7 +66,12 @@ class CheckoutView(View):
                     return redirect("core:checkout")
             else:
                 messages.warning(self.request, "Failed checkout.")
-                return render(self.request, "checkout.html", {'form': form})
+                context = {
+                    'form': form,
+                    'order': order,
+                    'couponform': CouponForm()
+                }
+                return render(self.request, "checkout.html", context)
         except ObjectDoesNotExist:
             return redirect("core:order-summary")
 
@@ -269,3 +275,31 @@ def remove_single_item_from_cart(request, slug):
     else:
         messages.warning(request, "You do not have an active order.")
         return redirect("core:product", slug=slug)
+
+
+# def get_coupon(request, code):
+
+
+def add_coupon(request):
+    if request.method == "POST":
+        form = CouponForm(request.POST or None)
+        if form.is_valid():
+            code = form.cleaned_data.get('code')
+            order = Order.objects.get(user=request.user, is_ordered=False)
+            if order:
+                try:
+                    coupon = Coupon.objects.get(code=code)
+                except ObjectDoesNotExist:
+                    messages.warning(request, "This coupon does not exist.")
+                    return redirect("core:checkout")
+                order.coupon = coupon
+                order.save()
+                messages.success(request, "Successfully added coupon.")
+                return redirect("core:checkout")
+            else:
+                messages.warning(request, "You do not have an active order.")
+                return redirect("core:order-summary")
+    # TODO: raise error
+    return None
+
+    
