@@ -12,9 +12,9 @@ CATEGORY_CHOICES = (
 )
 
 LABEL_CHOICES = (
-    ('P', 'primary'),
-    ('S', 'secondary'),
-    ('D', 'danger'),
+    ('V', 'Vegan'),
+    ('GF', 'Gluten-free'),
+    ('MS', 'Michelin-starred'),
 )
 
 
@@ -22,9 +22,9 @@ class Item(models.Model):
     title = models.CharField(max_length=100)
     price = models.FloatField()
     discount_price = models.FloatField(blank=True, null=True)
-    category = models.CharField(choices=CATEGORY_CHOICES, max_length=2)
+    category = models.CharField(choices=CATEGORY_CHOICES, max_length=5)
     label = models.CharField(choices=LABEL_CHOICES,
-                             max_length=1, null=True, blank=True)
+                             max_length=5, null=True, blank=True)
     slug = models.SlugField()
     description = models.TextField()
     imgsrc = models.TextField(blank=True, null=True)

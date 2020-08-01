@@ -273,17 +273,19 @@
                 <strong>
                   <a href="{{ item.get_absolute_url }}" class="dark-grey-text"
                     >{{ item.title }} 
+                    {% if item.discount_price %}
+                    <span class="badge badge-pill danger-color-dark text-uppercase">
+                      sale
+                    </span>
+                    {% endif %}
                     {% if item.label %}
-                    <span
-                      class="badge badge-pill {{ item.get_label_display }}-color"
-                      >NEW</span
-                    >
-                    {% else %} 
+                    <span class="badge badge-pill bg-dark">
+                      {{ item.get_label_display }}
+                    </span>
                     {% endif %}
                   </a>
                 </strong>
               </h5>
-
               <h4 class="font-weight-bold blue-text">
                 <strong
                   >$ {% if item.discount_price %} 
