@@ -1,6 +1,6 @@
 import stripe
 from django.core.paginator import Paginator
-from django.db.models import Q, Count
+from django.db.models import Q
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
@@ -19,18 +19,31 @@ STRIPE_PUBLIC_KEY = settings.STRIPE_PUBLISHABLE_KEY
 def index(request):
     page = request.GET.get('page', '1')
     kw = request.GET.get('kw', '')
-    item_list = Item.objects.order_by('-create_date')
+    sort = request.GET.get('sort', 'all')
+
+    if sort == "starters":
+        item_list = Item.objects.order_by(
+            '-create_date').filter(category="Starters")
+    elif sort == "main-dishes":
+        item_list = Item.objects.order_by(
+            '-create_date').filter(category="Main dishes")
+    elif sort == "desserts":
+        item_list = Item.objects.order_by(
+            '-create_date').filter(category="Desserts")
+    elif sort == "drinks":
+        item_list = Item.objects.order_by(
+            '-create_date').filter(category="Drinks")
+    else:
+        item_list = Item.objects.order_by('-create_date')
     if kw:
         item_list = item_list.filter(
             Q(title__icontains=kw) |
-            Q(category__icontains=kw) |
             Q(label__icontains=kw) |
             Q(description__icontains=kw)
         ).distinct()
-
     paginator = Paginator(item_list, 8)
     page_obj = paginator.get_page(page)
-    context = {'page_obj': page_obj, 'page': page, 'kw': kw}
+    context = {'page_obj': page_obj, 'page': page, 'kw': kw, 'sort': sort}
     return render(request, 'home.html', context)
 
 

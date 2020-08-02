@@ -204,26 +204,25 @@
       <!-- Collapsible content -->
       <div class="collapse navbar-collapse" id="basicExampleNav">
         <!-- Links -->
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="#"
-              >All
+        <div class="navbar-nav mr-auto">
+          <a class="sort nav-item {% if sort == "all" %} active {% endif %}" data-filter="all" href="#">
+            <span class="nav-link">All
               <span class="sr-only">(current)</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Starters</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Main dishes</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Desserts</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Drinks</a>
-          </li>
-        </ul>
+            </span>
+          </a>
+          <a class="sort nav-item {% if sort == "starters" %} active {% endif %}" data-filter="starters" href="#">
+            <span class="nav-link">Starters</span>
+          </a>
+          <a class="sort nav-item {% if sort == "main-dishes" %} active {% endif %}" data-filter="main-dishes" href="#">
+            <span class="nav-link">Main dishes</span>
+          </a>
+          <a class="sort nav-item {% if sort == "desserts" %} active {% endif %}" data-filter="desserts" href="#">
+            <span class="nav-link">Desserts</span>
+          </a>
+          <a class="sort nav-item {% if sort == "drinks" %} active {% endif %}" data-filter="drinks" href="#">
+            <span class="nav-link">Drinks</span>
+          </a>
+        </div>
         <!-- Links -->
 
         <div class="form-inline float-right">
@@ -373,6 +372,7 @@
 <form id="searchForm" method="get" action="{% url 'core:homepage' %}">
   <input type="hidden" id="kw" name="kw" value="{{ kw|default_if_none:'' }}" />
   <input type="hidden" id="page" name="page" value="{{ page }}" />
+  <input type="hidden" name="sort" id="sort" value="{{ sort }}" />
 </form>
 
 {% endblock content %} 
@@ -393,9 +393,15 @@
     $(".kw").on("keypress", function(e) {
       if(e.which == 13) {
         $("#kw").val($(".kw").val());
-        $("#page").val(1); // 검색버튼을 클릭할 경우 1페이지부터 조회한다.
+        $("#page").val(1); 
         $("#searchForm").submit();
       }
+    });
+
+    $(".sort").on("click", function() {
+      $("#sort").val($(this).data("filter"));
+      $("#page").val(1);
+      $("#searchForm").submit();
     });
   });
 </script>

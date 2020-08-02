@@ -5,16 +5,16 @@ from django_countries.fields import CountryField
 
 
 CATEGORY_CHOICES = (
-    ('ST', 'Starters'),
-    ('MD', 'Main dishes'),
-    ('DS', 'Desserts'),
-    ('DR', 'Drinks'),
+    ('Starters', 'Starters'),
+    ('Main dishes', 'Main dishes'),
+    ('Desserts', 'Desserts'),
+    ('Drinks', 'Drinks'),
 )
 
 LABEL_CHOICES = (
-    ('V', 'Vegan'),
-    ('GF', 'Gluten-free'),
-    ('MS', 'Michelin-starred'),
+    ('Vegan', 'Vegan'),
+    ('Gluten Free', 'Gluten-free'),
+    ('Michelin Starred', 'Michelin-starred'),
 )
 
 
@@ -22,9 +22,9 @@ class Item(models.Model):
     title = models.CharField(max_length=100)
     price = models.FloatField()
     discount_price = models.FloatField(blank=True, null=True)
-    category = models.CharField(choices=CATEGORY_CHOICES, max_length=5)
+    category = models.CharField(choices=CATEGORY_CHOICES, max_length=30)
     label = models.CharField(choices=LABEL_CHOICES,
-                             max_length=5, null=True, blank=True)
+                             max_length=30, null=True, blank=True)
     slug = models.SlugField()
     description = models.TextField()
     imgsrc = models.TextField(blank=True, null=True)
