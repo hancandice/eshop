@@ -226,16 +226,24 @@
         </ul>
         <!-- Links -->
 
-        <form class="form-inline">
+        <div class="form-inline float-right">
           <div class="md-form my-0">
             <input
-              class="form-control mr-sm-2"
+              class="form-control kw mr-sm-2"
               type="text"
+              value="{{ kw|default_if_none:'' }}"
               placeholder="Search"
               aria-label="Search"
             />
+            <button
+              class="btn-floating btn-sm btn-mdb-color"
+              type="button"
+              id="btnSearch"
+            >
+              <i class="fas fa-search"></i>
+            </button>
           </div>
-        </form>
+        </div>
       </div>
       <!-- Collapsible content -->
     </nav>
@@ -245,7 +253,8 @@
     <section class="text-center mb-4">
       <!--Grid row-->
       <div class="row wow fadeIn">
-        {% for item in object_list %}
+        {% if page_obj %}
+        {% for item in page_obj %}
         <div class="col-lg-3 col-md-6 mb-4">
           <!--Card-->
           <div class="card">
@@ -267,20 +276,22 @@
             <div class="card-body text-center">
               <!--Category & Title-->
               <a href="" class="grey-text">
-                <h5>{{ item.get_category_display }}</h5>
+                <h5> {{ item.get_category_display }} </h5>
               </a>
               <h5>
                 <strong>
                   <a href="{{ item.get_absolute_url }}" class="dark-grey-text"
                     >{{ item.title }} 
                     {% if item.discount_price %}
-                    <span class="badge badge-pill danger-color-dark text-uppercase">
+                    <span
+                      class="badge badge-pill danger-color-dark text-uppercase"
+                    >
                       sale
                     </span>
-                    {% endif %}
+                    {% endif %} 
                     {% if item.label %}
                     <span class="badge badge-pill bg-dark">
-                      {{ item.get_label_display }}
+                       {{ item.get_label_display }} 
                     </span>
                     {% endif %}
                   </a>
@@ -301,20 +312,20 @@
           <!--Card-->
         </div>
         {% endfor %}
+        {% endif %}
       </div>
       <!--Grid row-->
     </section>
     <!--Section: Products v.3-->
-
     <!--Pagination-->
-    {% if is_paginated %}
     <nav class="d-flex justify-content-center wow fadeIn">
       <ul class="pagination pg-blue">
         {% if page_obj.has_previous %}
         <li class="page-item">
           <a
             class="page-link"
-            href="?page={{ page_obj.previous_page_number }}"
+            data-page="{{ page_obj.previous_page_number }}"
+            href="#"
             aria-label="Previous"
           >
             <span aria-hidden="true">&laquo;</span>
@@ -326,14 +337,14 @@
         {% if pageNumber >= page_obj.number|add:-5 and pageNumber <= page_obj.number|add:5 %} 
         {% if pageNumber == page_obj.number %}
         <li class="page-item active">
-          <a class="page-link" href="#"
+          <a class="page-link" data-page="{{ pageNumber }}" href="#"
             >{{ page_obj.number }}
             <span class="sr-only">(current)</span>
           </a>
         </li>
         {% else %}
         <li class="page-item">
-          <a class="page-link" href="?page={{ pageNumber }}"
+          <a class="page-link" data-page="{{ pageNumber }}" href="#"
             >{{ pageNumber }}
           </a>
         </li>
@@ -344,7 +355,8 @@
         <li class="page-item">
           <a
             class="page-link"
-            href="?page={{ page_obj.next_page_number }}"
+            data-page="{{ page_obj.next_page_number }}"
+            href="#"
             aria-label="Next"
           >
             <span aria-hidden="true">&raquo;</span>
@@ -354,9 +366,37 @@
         {% endif %}
       </ul>
     </nav>
-    {% endif %}
   </div>
 </main>
 <!--Main layout-->
 
-{% endblock content %}
+<form id="searchForm" method="get" action="{% url 'core:homepage' %}">
+  <input type="hidden" id="kw" name="kw" value="{{ kw|default_if_none:'' }}" />
+  <input type="hidden" id="page" name="page" value="{{ page }}" />
+</form>
+
+{% endblock content %} 
+{% block script %}
+<script type="text/javascript">
+  $(document).ready(function () {
+    $(".page-link").on("click", function () {
+      $("#page").val($(this).data("page"));
+      $("#searchForm").submit();
+    });
+
+    $("#btnSearch").on("click", function () {
+      $("#kw").val($(".kw").val());
+      $("#page").val(1); // 검색버튼을 클릭할 경우 1페이지부터 조회한다.
+      $("#searchForm").submit();
+    });
+
+    $(".kw").on("keypress", function(e) {
+      if(e.which == 13) {
+        $("#kw").val($(".kw").val());
+        $("#page").val(1); // 검색버튼을 클릭할 경우 1페이지부터 조회한다.
+        $("#searchForm").submit();
+      }
+    });
+  });
+</script>
+{% endblock script %}

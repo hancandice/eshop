@@ -1,19 +1,37 @@
 import stripe
-
+from django.core.paginator import Paginator
+from django.db.models import Q, Count
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render, get_object_or_404
-from django.shortcuts import redirect
+from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
-from django.views.generic import ListView, DetailView, View
+from django.views.generic import DetailView, View
 from .models import Item, OrderItem, Order, BillingAddress, Payment, Coupon
 from .forms import CheckoutForm, CouponForm
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 STRIPE_PUBLIC_KEY = settings.STRIPE_PUBLISHABLE_KEY
+
+
+def index(request):
+    page = request.GET.get('page', '1')
+    kw = request.GET.get('kw', '')
+    item_list = Item.objects.order_by('-create_date')
+    if kw:
+        item_list = item_list.filter(
+            Q(title__icontains=kw) |
+            Q(category__icontains=kw) |
+            Q(label__icontains=kw) |
+            Q(description__icontains=kw)
+        ).distinct()
+
+    paginator = Paginator(item_list, 8)
+    page_obj = paginator.get_page(page)
+    context = {'page_obj': page_obj, 'page': page, 'kw': kw}
+    return render(request, 'home.html', context)
 
 
 class CheckoutView(View):
@@ -93,8 +111,9 @@ class PaymentView(View):
             }
             return render(self.request, "payment.html", context)
         else:
-            messages.warning(self.request, "You have not added a billing address.")  
-            return redirect("core:checkout")  
+            messages.warning(
+                self.request, "You have not added a billing address.")
+            return redirect("core:checkout")
 
     def post(self, *args, **kwargs):
         try:
@@ -164,13 +183,6 @@ class PaymentView(View):
             return redirect("/")
         except ObjectDoesNotExist:
             return redirect("core:order-summary")
-
-
-class HomeView(ListView):
-    model = Item
-    paginate_by = 8
-    template_name = "home.html"
-    ordering = ['-create_date']
 
 
 class OrderSummaryView(LoginRequiredMixin, View):
@@ -294,12 +306,14 @@ class AddCouponView(View):
                 try:
                     coupon = Coupon.objects.get(code=code)
                 except ObjectDoesNotExist:
-                    messages.warning(self.request, "This coupon does not exist.")
+                    messages.warning(
+                        self.request, "This coupon does not exist.")
                     return redirect("core:checkout")
                 order.coupon = coupon
                 order.save()
                 messages.success(self.request, "Successfully added coupon.")
                 return redirect("core:checkout")
             else:
-                messages.warning(self.request, "You do not have an active order.")
+                messages.warning(
+                    self.request, "You do not have an active order.")
                 return redirect("core:order-summary")
