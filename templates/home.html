@@ -226,21 +226,22 @@
         <!-- Links -->
 
         <div class="form-inline float-right">
+          <button
+              class="btn-floating btn-sm btn-mdb-color"
+              type="button"
+              id="btnSearch"
+              style="border: none;"
+            >
+              <i class="fas fa-search"></i>
+            </button>
           <div class="md-form my-0">
             <input
-              class="form-control kw mr-sm-2"
+              class="form-control kw ml-2"
               type="text"
               value="{{ kw|default_if_none:'' }}"
               placeholder="Search"
               aria-label="Search"
             />
-            <button
-              class="btn-floating btn-sm btn-mdb-color"
-              type="button"
-              id="btnSearch"
-            >
-              <i class="fas fa-search"></i>
-            </button>
           </div>
         </div>
       </div>
