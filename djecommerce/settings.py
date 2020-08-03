@@ -5,7 +5,7 @@ ENVIRONMENT = os.getenv('ENVIRONMENT', 'development')
 
 DEBUG = True
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SECRET_KEY = '-05sgp9!deq=q1nltm@^^2cc+v29i(tyybv3v2t77qi66czazj'
+SECRET_KEY = os.environ['SECRET_KEY']
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
@@ -27,7 +27,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'django_countries',
     'core',
-    'social_django',
+    # 'social_django',
 ]
 
 MIDDLEWARE = [
@@ -98,7 +98,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 7
-ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
 ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 180
