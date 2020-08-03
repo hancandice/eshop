@@ -20,17 +20,8 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-<<<<<<< Updated upstream
-    'allauth.socialaccount.providers.github',
-    'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.twitter',
-=======
-<<<<<<< Updated upstream
-=======
     # 'allauth.socialaccount.providers.google',
     # 'allauth.socialaccount.providers.facebook',
->>>>>>> Stashed changes
->>>>>>> Stashed changes
     'stripe',
 
     'crispy_forms',
@@ -39,53 +30,6 @@ INSTALLED_APPS = [
     'social_django',
 ]
 
-<<<<<<< Updated upstream
-SOCIALACCOUNT_PROVIDERS = {
-    'github': {},
-    'google': {},
-    'twitter': {}
-}
-
-=======
-<<<<<<< Updated upstream
-=======
-SOCIALACCOUNT_PROVIDERS = {
-    # 'facebook': {
-    #     'METHOD': 'oauth2',
-    #     'SCOPE': ['email', 'public_profile', 'user_friends'],
-    #     'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
-    #     'INIT_PARAMS': {'cookie': True},
-    #     'FIELDS': [
-    #         'id',
-    #         'email',
-    #         'name',
-    #         'first_name',
-    #         'last_name',
-    #         'verified',
-    #         'locale',
-    #         'timezone',
-    #         'link',
-    #         'gender',
-    #         'updated_time',
-    #     ],
-    #     'EXCHANGE_TOKEN': True,
-    #     'LOCALE_FUNC': 'path.to.callable',
-    #     'VERIFIED_EMAIL': False,
-    #     'VERSION': 'v2.12',
-    # },
-    # 'google': {
-    #     'SCOPE': [
-    #         'profile',
-    #         'email',
-    #     ],
-    #     'AUTH_PARAMS': {
-    #         'access_type': 'online',
-    #     }
-    # }
-}
-
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -148,8 +92,6 @@ if ENVIRONMENT == 'production':
 
 
 # Auth
-
-<<<<<<< Updated upstream
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
@@ -160,38 +102,12 @@ ACCOUNT_EMAIL_REQUIRED = False
 ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
 ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 180
-=======
-AUTHENTICATION_BACKENDS = [
-
-<<<<<<< Updated upstream
-    # Needed to login by username in Django admin, regardless of `allauth`
-    'django.contrib.auth.backends.ModelBackend',
-
-    # `allauth` specific authentication methods, such as login by e-mail
-    'allauth.account.auth_backends.AuthenticationBackend',
-
-]
-=======
-# ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 7
-# ACCOUNT_EMAIL_REQUIRED = True
-# ACCOUNT_EMAIL_VERIFICATION = "mandatory"
-# ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
-# ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 180
->>>>>>> Stashed changes
 LOGIN_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 ACCOUNT_FORMS = {
     'signup': 'djecommerce.forms.CustomSignupForm',
 }
-<<<<<<< Updated upstream
-=======
-# SOCIALACCOUNT_QUERY_EMAIL = ACCOUNT_EMAIL_REQUIRED
-# SOCIALACCOUNT_EMAIL_REQUIRED = ACCOUNT_EMAIL_REQUIRED
-# SOCIALACCOUNT_STORE_TOKENS = False
-
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 
 SITE_ID = 1
 
@@ -199,7 +115,6 @@ SITE_ID = 1
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 # STRIPE Settings
-
 dotenv_file = os.path.join(BASE_DIR, ".env")
 if os.path.isfile(dotenv_file):
     dotenv.load_dotenv(dotenv_file)
