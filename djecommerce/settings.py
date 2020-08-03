@@ -1,10 +1,14 @@
 import os
 import dotenv
 
+
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'development')
 
 DEBUG = True
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+dotenv_file = os.path.join(BASE_DIR, ".env")
+if os.path.isfile(dotenv_file):
+    dotenv.load_dotenv(dotenv_file)
 SECRET_KEY = os.environ['SECRET_KEY']
 ALLOWED_HOSTS = []
 
@@ -115,9 +119,7 @@ SITE_ID = 1
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 # STRIPE Settings
-dotenv_file = os.path.join(BASE_DIR, ".env")
-if os.path.isfile(dotenv_file):
-    dotenv.load_dotenv(dotenv_file)
+
 
 STRIPE_PUBLISHABLE_KEY = os.environ['STRIPE_PUBLISHABLE_KEY']
 STRIPE_SECRET_KEY = os.environ['STRIPE_SECRET_KEY']
