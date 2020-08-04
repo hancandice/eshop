@@ -9,7 +9,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 dotenv_file = os.path.join(BASE_DIR, ".env")
 if os.path.isfile(dotenv_file):
     dotenv.load_dotenv(dotenv_file)
-SECRET_KEY = os.environ['SECRET_KEY']
+SECRET_KEY = str(os.environ.get('SECRET_KEY', ''))
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
@@ -61,6 +61,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
@@ -121,5 +122,5 @@ CRISPY_TEMPLATE_PACK = "bootstrap4"
 # STRIPE Settings
 
 
-STRIPE_PUBLISHABLE_KEY = os.environ['STRIPE_PUBLISHABLE_KEY']
-STRIPE_SECRET_KEY = os.environ['STRIPE_SECRET_KEY']
+STRIPE_PUBLISHABLE_KEY = str(os.environ.get('STRIPE_PUBLISHABLE_KEY', ''))
+STRIPE_SECRET_KEY = str(os.environ.get('STRIPE_SECRET_KEY', ''))

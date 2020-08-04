@@ -14,7 +14,7 @@ def commentCreateQuestion(request, questionId):
     question = get_object_or_404(Question, pk=questionId)
     if request.method == "GET":
         form = CommentForm()
-        context = {'form':form}
+        context = {'form': form}
         return render(request, 'pybo/comment_form.html', context)
     else:
         form = CommentForm(request.POST)
@@ -24,9 +24,10 @@ def commentCreateQuestion(request, questionId):
             comment.createDate = timezone.now()
             comment.question = question
             comment.save()
-            return redirect('{}#comment_{}'.format(resolve_url('pybo:detail',questionId=comment.question.id),comment.id))
+            return redirect('{}#comment_{}'.format(resolve_url('pybo:detail', questionId=comment.question.id), comment.id))
         else:
-            return render(request, 'pybo/comment_form.html', {'form':form})
+            return render(request, 'pybo/comment_form.html', {'form': form})
+
 
 @login_required(login_url='account_login')
 def commentModifyQuestion(request, commentId):
@@ -37,7 +38,7 @@ def commentModifyQuestion(request, commentId):
     else:
         if request.method == "GET":
             form = CommentForm(instance=comment)
-            context = {'form':form}
+            context = {'form': form}
             return render(request, 'pybo/comment_form.html', context)
         else:
             form = CommentForm(request.POST, instance=comment)
@@ -46,10 +47,11 @@ def commentModifyQuestion(request, commentId):
                 comment.author = request.user
                 comment.modifyDate = timezone.now()
                 comment.save()
-                return redirect('{}#comment_{}'.format(resolve_url('pybo:detail',questionId=comment.question.id),comment.id))
+                return redirect('{}#comment_{}'.format(resolve_url('pybo:detail', questionId=comment.question.id), comment.id))
             else:
-                context = {'form':form}
+                context = {'form': form}
                 return render(request, 'pybo/comment_form.html', context)
+
 
 @login_required(login_url='account_login')
 def commentDeleteQuestion(request, commentId):
@@ -59,8 +61,9 @@ def commentDeleteQuestion(request, commentId):
         return redirect('pybo:detail', questionId=comment.question.id)
     else:
         comment.delete()
-        return redirect('pybo:detail', questionId=comment.question.id)
+        messages.info(request, 'Successfully deleted your comment.')
 
+        return redirect('pybo:detail', questionId=comment.question.id)
 
 
 @login_required(login_url='account_login')
@@ -68,7 +71,7 @@ def commentCreateAnswer(request, answerId):
     answer = get_object_or_404(Answer, pk=answerId)
     if request.method == "GET":
         form = CommentForm()
-        context = {'form':form}
+        context = {'form': form}
         return render(request, 'pybo/comment_form.html', context)
     else:
         form = CommentForm(request.POST)
@@ -78,9 +81,10 @@ def commentCreateAnswer(request, answerId):
             comment.createDate = timezone.now()
             comment.answer = answer
             comment.save()
-            return redirect('{}#comment_{}'.format(resolve_url('pybo:detail',questionId=comment.answer.question.id),comment.id))
+            return redirect('{}#comment_{}'.format(resolve_url('pybo:detail', questionId=comment.answer.question.id), comment.id))
         else:
-            return render(request, 'pybo/comment_form.html', {'form':form})
+            return render(request, 'pybo/comment_form.html', {'form': form})
+
 
 @login_required(login_url='account_login')
 def commentModifyAnswer(request, commentId):
@@ -91,7 +95,7 @@ def commentModifyAnswer(request, commentId):
     else:
         if request.method == "GET":
             form = CommentForm(instance=comment)
-            context = {'form':form}
+            context = {'form': form}
             return render(request, 'pybo/comment_form.html', context)
         else:
             form = CommentForm(request.POST, instance=comment)
@@ -100,10 +104,11 @@ def commentModifyAnswer(request, commentId):
                 comment.author = request.user
                 comment.modifyDate = timezone.now()
                 comment.save()
-                return redirect('{}#comment_{}'.format(resolve_url('pybo:detail',questionId=comment.answer.question.id),comment.id))
+                return redirect('{}#comment_{}'.format(resolve_url('pybo:detail', questionId=comment.answer.question.id), comment.id))
             else:
-                context = {'form':form}
+                context = {'form': form}
                 return render(request, 'pybo/comment_form.html', context)
+
 
 @login_required(login_url='account_login')
 def commentDeleteAnswer(request, commentId):
@@ -113,5 +118,5 @@ def commentDeleteAnswer(request, commentId):
         return redirect('pybo:detail', questionId=comment.answer.question.id)
     else:
         comment.delete()
+        messages.info(request, 'Successfully deleted your comment.')
         return redirect('pybo:detail', questionId=comment.answer.question.id)
-        

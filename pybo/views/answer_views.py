@@ -23,12 +23,11 @@ def answerCreate(request, questionId):
             return redirect('{}#answer_{}'.format(resolve_url('pybo:detail', questionId=question.id), answer.id))
         else:
             messages.warning(request, 'Failed answer submit')
-            return render(request, "pybo/question_detail.html", {'question':question, 'form':form})    
+            return render(request, "pybo/question_detail.html", {'question': question, 'form': form})
     else:
         form = AnswerForm()
-        context = {'question':question, 'form':form}
+        context = {'question': question, 'form': form}
         return render(request, "pybo/question_detail.html", context)
-
 
 
 @login_required(login_url='account_login')
@@ -40,19 +39,20 @@ def answerModify(request, answerId):
     else:
         if request.method == "GET":
             form = AnswerForm(instance=answer)
-            context = {'answer':answer, 'form':form}
+            context = {'answer': answer, 'form': form}
             return render(request, 'pybo/answer_form.html', context)
         else:
-            form = AnswerForm(request.POST,instance=answer)    
+            form = AnswerForm(request.POST, instance=answer)
             if form.is_valid():
                 answer = form.save(commit=False)
                 answer.author = request.user
                 answer.modifyDate = timezone.now()
                 answer.save()
-                return redirect('{}#answer_{}'.format(resolve_url('pybo:detail',questionId=answer.question.id), answer.id))
+                return redirect('{}#answer_{}'.format(resolve_url('pybo:detail', questionId=answer.question.id), answer.id))
             else:
-                context = {'answer':answer, 'form':form}
-                return render(request, 'pybo/answer_form.html', context)   
+                context = {'answer': answer, 'form': form}
+                return render(request, 'pybo/answer_form.html', context)
+
 
 @login_required(login_url='account_login')
 def answerDelete(request, answerId):
@@ -61,5 +61,5 @@ def answerDelete(request, answerId):
         messages.warning(request, 'Not authorized to delete')
     else:
         answer.delete()
+        messages.info(request, 'Successfully deleted your answer.')
     return redirect('pybo:detail', questionId=answer.question.id)
-
