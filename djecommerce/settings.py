@@ -20,7 +20,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-
+    'pybo.apps.PyboConfig',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
