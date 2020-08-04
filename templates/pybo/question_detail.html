@@ -1,5 +1,13 @@
 {% extends 'base.html' %} 
 {% load pybo_filter %}
+{% block extra_head %} 
+<style type="text/css">
+  .commentContent p{
+    margin-top: 0;
+    margin-bottom: 0 !important;
+  }
+</style>
+{% endblock extra_head %}
 {% block content %}
 
 <div class="container my-3">
@@ -25,7 +33,7 @@
                 <div>{{ question.modifyDate }}</div>
             </div>
             {% endif %}
-            <div class="badge badge-light p-2 text-left">
+            <div class="badge badge-dark p-2 text-left">
               <div class="mb-2">{{ question.author.username }}</div>
               <div>{{question.createDate}}</div>
             </div>
@@ -43,8 +51,8 @@
           {% for comment in question.comment_set.all %}
           <a name="comment_{{ comment.id }}"></a>
           <div class="p-2 my-1 text-left" style="background-color: #cccec7; border-radius: 0 10px 10px 10px;  width:100%; display: flex; justify-content: space-between;">
-            <span style="white-space: pre-line;">{{ comment.content }} </span>
-            <span class="small text-muted">
+            <span class="small commentContent" style="white-space: pre-line;">{{ comment.content|mark }} </span>
+            <span class="small text-muted commentContent">
               @ {{ comment.author }} / {{ comment.createDate }}
             </span></div>
             {% if request.user == comment.author %}
@@ -90,7 +98,7 @@
                 <div>{{ answer.modifyDate }}</div>
             </div>
             {% endif %}
-        <div class="badge badge-light p-2 text-left">
+        <div class="badge badge-dark p-2 text-left">
           <div class="mb-2">{{ answer.author.username }}</div>
           <div>{{answer.createDate}}</div>
         </div>
@@ -108,8 +116,8 @@
       {% for comment in answer.comment_set.all %}
       <a name="comment_{{ comment.id }}"></a>
       <div class="p-2 my-1 text-left" style="background-color: #cccec7; border-radius: 0 10px 10px 10px;  width:100%; display: flex; justify-content: space-between;">
-        <span style="white-space: pre-line;">{{ comment.content }} </span>
-        <span class="small text-muted">
+        <span class="commentContent small" style="white-space: pre-line;">{{ comment.content|mark }} </span>
+        <span class="small text-muted commentContent">
           @ {{ comment.author }} / {{ comment.createDate }}
         </span></div>
         {% if request.user == comment.author %}

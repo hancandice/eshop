@@ -10,7 +10,6 @@
     />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <title>{% block head_title %}{% endblock %}</title>
-    {% block extra_head %} {% endblock extra_head %}
     <!-- Font Awesome -->
     <link
       rel="stylesheet"
@@ -48,6 +47,7 @@
       }
     </style>
   </head>
+  {% block extra_head %} {% endblock extra_head %}
   {% include "navbar.html" %}
   <body>
     <div class="mt-5 pt-4">
