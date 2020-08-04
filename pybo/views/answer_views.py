@@ -22,6 +22,7 @@ def answerCreate(request, questionId):
             answer.save()
             return redirect('{}#answer_{}'.format(resolve_url('pybo:detail', questionId=question.id), answer.id))
         else:
+            messages.warning(request, 'Failed answer submit')
             return render(request, "pybo/question_detail.html", {'question':question, 'form':form})    
     else:
         form = AnswerForm()
