@@ -1,4 +1,8 @@
 env
+.idea
+db.sqlite3
+*.pyc
+__pycache__
 **/*.pyc
 **/__pycache__
 media_root
@@ -7,8 +11,4 @@ media_root
 *.env
 !.gitignore
 !.travis.yml
-/.env
 /.vscode
-
-.idea
-db.sqlite3
