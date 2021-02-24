@@ -1,1 +1,1 @@
-# E-commerce Website made with Django Python 
+
